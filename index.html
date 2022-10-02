@@ -11,6 +11,7 @@
     <link rel="preload" href="fonts/exo2-semibold.woff2" as="font" crossorigin="anonymous">
     <link rel="preload" href="fonts/exo2-bold.woff2" as="font" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="leaflet/leaflet.css">
 </head>
 
 <body>
@@ -190,9 +191,9 @@
                             data-delay="300">
                             <div class="tabs__controls" data-tabs="controls">
                                 <!-- При переключении с продавцов на покупателей и обратно нужно выделить активный пункт .is-active -->
-                                <button class="tabs__control btn is-active" type="button"
+                                <button class="tabs__control btn buy is-active" type="button"
                                     data-tabs="control">Купить</button>
-                                <button class="tabs__control btn" type="button" data-tabs="control">Продать</button>
+                                <button class="tabs__control btn sell" type="button" data-tabs="control">Продать</button>
                             </div>
                         </div>
                     </div>
@@ -208,9 +209,9 @@
                             data-delay="300">
                             <!-- При переключении с карты на список и обратно нужно выделить активный пункт .is-active -->
                             <div class="tabs__controls" data-tabs="controls">
-                                <button class="tabs__control btn is-active" type="button"
+                                <button class="tabs__control btn btn-list is-active" type="button"
                                     data-tabs="control">Cписок</button>
-                                <button class="tabs__control btn" type="button" data-tabs="control">Карта</button>
+                                <button class="tabs__control btn btn-map" type="button" data-tabs="control">Карта</button>
                             </div>
                         </div>
                     </div>
@@ -253,7 +254,7 @@
 
             <!-- При переключении на карту нужно отобразить данный контейнер -->
             <div class="container" style="display: none">
-                <div class="map">
+                <div class="map" id="map">
                     <!--
                         Карту нужно отрисовать в этот контейнер. Иконки для карты -
                         img/pin.svg и img/pin-verified.svg для обычных пользователей
@@ -299,7 +300,7 @@
                 <h2 class="modal__description">Покупка криптовалюты</h2>
                 <!-- Не забудьте указать верный action-атрибут -->
                 <form class="modal-buy" method="post">
-                    <!-- 
+                    <!--
                         Обратите внимание, что всем полям для отправки на сервер нужно указать
                         атрибуты name (их список вы найдёте в техзадании), а часть полей
                         вообще отправляется скрытыми
@@ -315,12 +316,12 @@
                                 class="transaction-info__label">Пользователь</span><span class="transaction-info__data">
                                 <svg width="20" height="20" aria-hidden="true">
                                     <use xlink:href="#icon-star"></use>
-                                </svg>John Smith</span></p>
+                                </svg><span id="seller-name" name="user-name">John Smith</span></span></p>
                         <p class="transaction-info__item transaction-info__item--exchangerate"><span
-                                class="transaction-info__label">Курс</span><span class="transaction-info__data">9 999
+                                class="transaction-info__label">Курс</span><span class="transaction-info__data" id="transaction__exchange-rate">9 999
                                 999&nbsp;₽</span></p>
                         <p class="transaction-info__item transaction-info__item--cashlimit"><span
-                                class="transaction-info__label">Лимит</span><span class="transaction-info__data">9 999
+                                class="transaction-info__label">Лимит</span><span class="transaction-info__data" id="transaction__limit">9 999
                                 999&nbsp;₽&nbsp;-&nbsp;9 999 999 000&nbsp;₽</span></p>
                     </div>
                     <div class="modal__container modal__container--small">
@@ -330,7 +331,7 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0">
+                                    <input type="number" value="" placeholder="0" id="payment">
                                 </label>
                                 <!-- Пример стилизации ошибки валидации -->
                                 <div class="custom-input__error">Минимальная сумма — 9 999 999 ₽</div>
@@ -343,7 +344,7 @@
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Зачисление</span><span
                                         class="custom-input__unit">KEKS</span>
-                                    <input type="number" placeholder="0">
+                                    <input type="number" placeholder="0" id="points">
                                 </label>
                             </div>
                         </div>
@@ -427,7 +428,7 @@
                 <h2 class="modal__description">Продажа криптовалюты</h2>
                 <!-- Не забудьте указать верный action-атрибут -->
                 <form class="modal-sell" method="post">
-                    <!-- 
+                    <!--
                         Обратите внимание, что всем полям для отправки на сервер нужно указать
                         атрибуты name (их список вы найдёте в техзадании), а часть полей
                         вообще отправляется скрытыми
@@ -445,16 +446,16 @@
                                 <svg width="20" height="20" aria-hidden="true">
                                     <use xlink:href="#icon-star"></use>
                                 </svg>
-                                John Smith
+                                <span id="buyer-name" name="user-name">John Smith</span>
                             </span>
                         </p>
                         <p class="transaction-info__item transaction-info__item--exchangerate">
                             <span class="transaction-info__label">Курс</span>
-                            <span class="transaction-info__data">9 999 999&nbsp;₽</span>
+                            <span class="transaction-info__data" id="transaction__exchange-rate">9 999 999&nbsp;₽</span>
                         </p>
                         <p class="transaction-info__item transaction-info__item--cashlimit">
                             <span class="transaction-info__label">Лимит</span>
-                            <span class="transaction-info__data">9 999 999&nbsp;₽&nbsp;-&nbsp;9 999 999
+                            <span class="transaction-info__data" id="transaction__limit">9 999 999&nbsp;₽&nbsp;-&nbsp;9 999 999
                                 000&nbsp;₽</span>
                         </p>
                     </div>
@@ -561,7 +562,7 @@
                 <svg width="20" height="20" aria-hidden="true">
                     <use xlink:href="#icon-star"></use>
                 </svg>
-                <span>John Smith</span>
+                <span id="user-name">John Smith</span>
             </td>
             <td class="users-list__table-cell users-list__table-currency">keks</td>
             <td class="users-list__table-cell users-list__table-exchangerate">9 999 999&nbsp;₽</td>
@@ -596,11 +597,11 @@
                 <span>Неопознанный енот</span>
             </span>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Валюта</span><span
-                    class="user-card__cash-data">KEKS</span></p>
+                    class="user-card__cash-data" id="user-card__currency">KEKS</span></p>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Курс</span><span
-                    class="user-card__cash-data">9 999 999 ₽</span></p>
+                    class="user-card__cash-data" id="user-card__exchangerate">9 999 999 ₽</span></p>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Лимит</span><span
-                    class="user-card__cash-data">9 900 ₽ – 9 900 000 000 ₽</span></p>
+                    class="user-card__cash-data" id="user-card__cashlimit">9 900 ₽ – 9 900 000 000 ₽</span></p>
             <ul class="user-card__badges-list">
                 <li class="user-card__badges-item badge">BitTransfer</li>
                 <li class="user-card__badges-item badge">CryptoEx</li>
@@ -610,9 +611,9 @@
             </button>
         </div>
     </template>
-
+    <script src="pristine/pristine.min.js"></script>
     <script src="./js/main.js" type="module"></script>
-
+    <script src="leaflet/leaflet.js"></script>
 </body>
 
 </html>
