@@ -306,10 +306,10 @@
                         вообще отправляется скрытыми
                     -->
                     <input type="hidden" name="type" value="BUY">
-                    <input type="hidden" name="contractorId">
-                    <input type="hidden" name="exchangeRate">
-                    <input type="hidden" name="sendingCurrency">
-                    <input type="hidden" name="receivingCurrency">
+                    <input type="hidden" class="contractor-id" name="contractorId">
+                    <input type="hidden" class="exchange-rate" name="exchangeRate">
+                    <input type="hidden" class="sending-currency" name="sendingCurrency">
+                    <input type="hidden" class="receiving-currency" name="receivingCurrency">
 
                     <div class="transaction-info">
                         <p class="transaction-info__item transaction-info__item--name"><span
@@ -359,7 +359,7 @@
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select required>
+                                <select id="sellSelect" required>
                                     <option selected>Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
@@ -372,7 +372,7 @@
                             <div class="custom-input">
                                 <!-- В случае, если выбрана оплата наличными, поле нужно оставить пустым -->
                                 <label><span class="custom-input__label">Номер банковской карты пользователя</span>
-                                    <input type="number" placeholder="1234 5678 9012 3456" disabled>
+                                    <input type="number" id="sellerCastom" placeholder="1234 5678 9012 3456" disabled>
                                 </label>
                             </div>
                         </div>
@@ -436,10 +436,10 @@
                         вообще отправляется скрытыми
                     -->
                     <input type="hidden" name="type" value="SELL">
-                    <input type="hidden" name="contractorId">
-                    <input type="hidden" name="exchangeRate">
-                    <input type="hidden" name="sendingCurrency">
-                    <input type="hidden" name="receivingCurrency">
+                    <input type="hidden" class="contractor-id" name="contractorId">
+                    <input type="hidden" class="exchange-rate" name="exchangeRate">
+                    <input type="hidden" class="sending-currency" name="sendingCurrency">
+                    <input type="hidden" class="receiving-currency" name="receivingCurrency">
 
                     <div class="transaction-info">
                         <p class="transaction-info__item transaction-info__item--name">

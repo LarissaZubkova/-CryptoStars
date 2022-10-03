@@ -102,4 +102,4 @@ buttonSellElement.addEventListener('click', onButtonSellClick);
 buttonBuyElement.addEventListener('click', onButtonBuyClick);
 checkedUsersElement.addEventListener('change', onCheckedUsersElementClick);
 
-export {renderUsersList, renderSellersList};
+export {renderUsersList, renderSellersList, sellersList, buyersList};

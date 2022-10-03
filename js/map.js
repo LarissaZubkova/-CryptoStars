@@ -20,6 +20,7 @@ const usersListElement = document.querySelector('.users-list');
 const mapElement = document.querySelector('.map');
 const map = L.map(MAP_CANVAS).setView(ADDRESS_DEFAULT, SCALE);
 const markerGroup = L.layerGroup().addTo(map);
+const buttonSellElement = document.querySelector('.sell');
 
 const displayMap = () => {
   L.tileLayer(
@@ -109,13 +110,26 @@ const renderSellerPin = (users) => {
 };
 
 const onButtonMapElementClick = () => {
+  const buttonBuyElement = document.querySelector('.buy');
   buttonMapElement.classList.add('is-active');
   buttonListElement.classList.remove('is-active');
   usersListElement.setAttribute('style', 'display: none');
   mapElement.closest('.container').removeAttribute('style');
+  buttonSellElement.setAttribute('disabled', 'disabled');
+  buttonBuyElement.classList.add('is-active');
+  buttonSellElement.classList.remove('is-active');
   displayMap();
 };
 
+const onButtonListElementClick = () => {
+  buttonMapElement.classList.remove('is-active');
+  buttonListElement.classList.add('is-active');
+  usersListElement.removeAttribute('style');
+  mapElement.closest('.container').setAttribute('style', 'display: none');
+  buttonSellElement.removeAttribute('disabled');
+};
+
 buttonMapElement.addEventListener('click', onButtonMapElementClick);
+buttonListElement.addEventListener('click', onButtonListElementClick);
 
 export {renderSellerPin};
