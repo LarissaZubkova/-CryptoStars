@@ -1,3 +1,5 @@
+import {openModalWindow} from './modal-window.js';
+
 const ADDRESS_DEFAULT = {
   lat: 59.92749,
   lng: 30.31127,
@@ -11,6 +13,7 @@ const Url = {
   VERIFIED_ICON: './img/pin-verified.svg',
   ORDINARY_ICON: 'img/pin.svg',
 };
+
 const buttonListElement = document.querySelector('.btn-list');
 const buttonMapElement = document.querySelector('.btn-map');
 const usersListElement = document.querySelector('.users-list');
@@ -45,6 +48,8 @@ const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance
   const mapBaloonElement = mapBaloonTemplateElement.cloneNode(true);
   const userNameElement = mapBaloonElement.querySelector('.user-card__user-name span');
   const badgesListElement = mapBaloonElement.querySelector('.user-card__badges-list');
+  const cardChangeBtnElement = mapBaloonElement.querySelector('.user-card__change-btn');
+
   if (!isVerified) {
     mapBaloonElement.querySelector('.user-card__user-name svg').remove();
   }
@@ -60,6 +65,11 @@ const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance
     methodElement.textContent = method.provider;
     badgesListElement.appendChild(methodElement);
   }));
+  const onCardChangeBtnElementClick = () => {
+    mapElement.closest('.container').setAttribute('style', 'display: none');
+    openModalWindow();
+  };
+  cardChangeBtnElement.addEventListener('click', onCardChangeBtnElementClick);
   return mapBaloonElement;
 };
 

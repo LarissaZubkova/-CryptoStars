@@ -299,7 +299,7 @@
             <div class="modal__content">
                 <h2 class="modal__description">Покупка криптовалюты</h2>
                 <!-- Не забудьте указать верный action-атрибут -->
-                <form class="modal-buy" method="post">
+                <form class="modal-buy" method="post" enctype="multipart/form-data" action="https://cryptostar.grading.pages.academy/" autocomplete="off">
                     <!--
                         Обратите внимание, что всем полям для отправки на сервер нужно указать
                         атрибуты name (их список вы найдёте в техзадании), а часть полей
@@ -331,10 +331,11 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0" id="payment">
+                                    <input type="number" value="" placeholder="0" id="payment" required
+                                    data-pristine-required-message="Обязательное поле">
                                 </label>
                                 <!-- Пример стилизации ошибки валидации -->
-                                <div class="custom-input__error">Минимальная сумма — 9 999 999 ₽</div>
+                                <div class="custom-input__error" id="example-error">Минимальная сумма — 9 999 999 ₽</div>
                             </div>
                         </div>
                         <svg class="modal__container-svg" width="14" height="12" aria-hidden="true">
@@ -344,7 +345,8 @@
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Зачисление</span><span
                                         class="custom-input__unit">KEKS</span>
-                                    <input type="number" placeholder="0" id="points">
+                                    <input type="number" placeholder="0" id="points" required
+                                    data-pristine-required-message="Обязательное поле">
                                 </label>
                             </div>
                         </div>
@@ -357,8 +359,8 @@
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select>
-                                    <option selected disabled>Выберите платёжную систему</option>
+                                <select required>
+                                    <option selected>Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
                                     <option>BitTransfer</option>
@@ -427,7 +429,7 @@
             <div class="modal__content">
                 <h2 class="modal__description">Продажа криптовалюты</h2>
                 <!-- Не забудьте указать верный action-атрибут -->
-                <form class="modal-sell" method="post">
+                <form class="modal-sell" method="post" enctype="multipart/form-data" action="https://cryptostar.grading.pages.academy/" autocomplete="off">
                     <!--
                         Обратите внимание, что всем полям для отправки на сервер нужно указать
                         атрибуты name (их список вы найдёте в техзадании), а часть полей

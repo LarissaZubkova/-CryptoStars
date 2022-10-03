@@ -38,7 +38,7 @@ const renderSellersList = () => {
     const userElement = userRowTemplateElement.cloneNode(true);
     const badgesListElement = userElement.querySelector('.users-list__badges-list');
     userElement.querySelector('.users-list__table-cashlimit').textContent =
-     `${(minAmount * exchangeRate).toFixed(DIGITS)} - ${(exchangeRate * balance.amount).toFixed(DIGITS)} ₽`;
+     `${minAmount} - ${(exchangeRate * balance.amount).toFixed(DIGITS)} ₽`;
     fillUsersData(userElement,{isVerified, userName, balance, exchangeRate});
     badgesListElement.textContent = '';
     paymentMethods.forEach(((method) => {

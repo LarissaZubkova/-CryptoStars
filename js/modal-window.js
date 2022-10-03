@@ -27,6 +27,7 @@ const fillModalSellerCard = (evt) => {
   modalBuyFormElement.querySelector('#transaction__limit').textContent =
   userListElement.querySelector('.users-list__table-cashlimit').textContent;
 };
+
 const fillModalBuyerCard = (evt) => {
   const userListElement = evt.target.closest('.users-list__table-row');
   const verifiedBuyerElement = modalSellFormElement.querySelector('svg');
@@ -81,7 +82,6 @@ const openModalWindow = (evt) => {
   }
   renderModalCard(evt);
   document.addEventListener('keydown', onModalEscDown);
-
 };
 
 const onModalSubmitClick = (evt) => {
@@ -109,4 +109,4 @@ function closeModalWindow () {
 
 usersListElement.addEventListener('click', onModalSubmitClick);
 
-export {modalSellFormElement, modalBuyFormElement};
+export {modalSellFormElement, modalBuyFormElement, openModalWindow};

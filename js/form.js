@@ -4,11 +4,14 @@ const paymentElement = modalBuyFormElement.querySelector('#payment');
 const pointsElement = modalBuyFormElement.querySelector('#points');
 const exchangeRateElement = modalBuyFormElement.querySelector('#transaction__exchange-rate');
 const transactionLimitElement = modalBuyFormElement.querySelector('#transaction__limit');
+const exampleErrorElement = modalBuyFormElement.querySelector('#example-error');
+
+exampleErrorElement.setAttribute('style', 'display: none');
 
 const pristineForBuy = new Pristine(modalBuyFormElement, {
-  classTo: 'custom-input__label',
-  errorClass: 'custom-input__error',
-  errorTextParent: 'custom-input__label',
+  classTo: 'custom-input',
+  errorTextClass: 'custom-input__error',
+  errorTextParent: 'custom-input',
 });
 
 const validatePayment = () => {
@@ -42,4 +45,13 @@ const fillBuyForm = () => {
   pristineForBuy.addValidator(paymentElement, validatePayment, 'no'/*, validatePaymentMassege*/);
 };
 fillBuyForm();
+modalBuyFormElement.addEventListener('submit', (evt) => {
+  evt.preventDefault();
 
+  const isValid = pristineForBuy.validate();
+  if (isValid) {
+    console.log('good');
+  } else {
+    console.log('no');
+  }
+});
