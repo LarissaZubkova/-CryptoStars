@@ -1,4 +1,5 @@
-import {modalSellFormElement, modalBuyFormElement} from './modal-window.js';
+import {modalBuyFormElement} from './modal-buy.js';
+import {sendData} from './api.js';
 
 const DIGITS = 2;
 const paymentElement = modalBuyFormElement.querySelector('#payment');
@@ -6,24 +7,23 @@ const pointsElement = modalBuyFormElement.querySelector('#points');
 const exchangeRateElement = modalBuyFormElement.querySelector('#transaction__exchange-rate');
 const transactionLimitElement = modalBuyFormElement.querySelector('#transaction__limit');
 
-const pristineForBuy = new Pristine(modalBuyFormElement, {
-  classTo: 'custom-input__label',
-  errorClass: 'custom-input__error',
-  errorTextParent: 'custom-input__label',
-});
+// const pristineForBuy = new Pristine(modalBuyFormElement, {
+//   classTo: 'custom-input__label',
+//   errorClass: 'custom-input__error',
+//   errorTextParent: 'custom-input__label',
+// });
 
 
-const validatePayment = () => {
-  const limits = Number(transactionLimitElement.textContent.split(' '));
-  const isValidMin = paymentElement.value >= limits[0];
-  const isValidMax = paymentElement.value <= limits[2];
+// const validatePayment = () => {
+//   const limits = Number(transactionLimitElement.textContent.split(' '));
+//   const isValidMin = paymentElement.value >= limits[0];
+//   const isValidMax = paymentElement.value <= limits[2];
 
-  return (isValidMin && isValidMax);
-};
-console.log(validatePayment());
+//   return (isValidMin && isValidMax);
+// };
 
-pristineForBuy.addValidator(paymentElement, validatePayment, 'no'/*, validatePaymentMassege*/);
-pristineForBuy.validate();
+// pristineForBuy.addValidator(paymentElement, validatePayment, 'no'/*, validatePaymentMassege*/);
+// pristineForBuy.validate();
 
 const onChangeAllBtnElementClick = () => {
   const userBalanceElement = document.querySelector('#user-fiat-balance');
@@ -44,3 +44,19 @@ const fillBuyForm = () => {
 };
 fillBuyForm();
 
+const setUserFormSubmit = (onSuccess) => {
+  modalBuyFormElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    // const isValid = pristine.validate();
+    // if (isValid) {
+    sendData(
+      () => onSuccess(),
+      () => console.log('Не удалось отправить форму. Попробуйте ещё раз'),
+      new FormData(evt.target),
+    );
+  //}
+  });
+};
+
+export {setUserFormSubmit};

@@ -1,4 +1,4 @@
-import {openModalWindow} from './modal-window.js';
+import {openModalWindow} from './modal-buy.js';
 
 const ADDRESS_DEFAULT = {
   lat: 59.92749,

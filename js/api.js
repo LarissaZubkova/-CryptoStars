@@ -14,4 +14,24 @@ const getDataContractors = (onSuccess) => {
     });
 };
 
-export {getDataContractors, getDataUser};
+const sendData = (onSuccess, onFail, body) => {
+  fetch(
+    'https://cryptostar.grading.pages.academy/',
+    {
+      method: 'POST',
+      body,
+    },
+  )
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      }
+    })
+    .catch(() => {
+      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+    });
+};
+
+export {getDataContractors, getDataUser,sendData};
