@@ -1,11 +1,16 @@
 import {isEscapeKey} from './utils.js';
 import {sellersList} from './users.js';
-import {fillModalBuyerCard} from './modul-sell.js';
+import {fillModalBuyerCard, fillSellCardData, onBuySelectElementChange} from './modal-sell.js';
 import {state} from './user-profile.js';
 
 const Currency = {
   keks: 'KEKS',
   rub: 'RUB'
+};
+
+const SelectOptions = {
+  cash: 'Cash in person',
+  default: 'Выберите платёжную систему',
 };
 
 const usersListElement = document.querySelector('.users-list__table-body');
@@ -20,6 +25,7 @@ const buyOverlayElement = modalBuyElement.querySelector('.modal__overlay');
 const sellOverlayElement = modalSellElement.querySelector('.modal__overlay');
 const buttonSellElement = document.querySelector('.sell');
 const sellSelectElement = modalBuyFormElement.querySelector('#sellSelect');
+const buttonMapElement = document.querySelector('.btn-map');
 
 let carrentSeller = {};
 const setCarrentSeller = (calculetedSeller) => {
@@ -27,6 +33,10 @@ const setCarrentSeller = (calculetedSeller) => {
 };
 
 const fillModalSellerCard = (evt) => {
+  // if (buttonMapElement.classList.contains('is-active')){
+
+  // }
+
   const userListElement = evt.target.closest('.users-list__table-row');
   const verifiedSellerElement = modalBuyFormElement.querySelector('svg');
   const exchangeRateElement = modalBuyFormElement.querySelector('#transaction__exchange-rate');
@@ -58,9 +68,7 @@ const fillModalSellerCard = (evt) => {
   hiddenRateElement.value = exchangeRateElement.textContent;
   sendingCurrencyElement.value = Currency.rub;
   receivingCurrencyElement.value = Currency.keks;
-  console.log(state.offers.wallet.address);
-  modalBuyFormElement.querySelector('#walletAddress').value = Number(state.offers.wallet.address);
-
+  modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
 };
 
 const renderModalCard = (evt) =>{
@@ -89,11 +97,12 @@ const onModalOverlayElementClick = (evt) => {
   }
 };
 
-const fillSellCardData = () => {
+const fillBuyCardData = () => {
   const firstSelectElement = sellSelectElement.children[0];
   sellSelectElement.textContent = '';
   sellSelectElement.appendChild(firstSelectElement);
   const currentPaymentMethods = carrentSeller.paymentMethods;
+
   for (const method of currentPaymentMethods) {
     const methodName = method.provider;
     const methodOption = document.createElement('option');
@@ -106,18 +115,19 @@ const fillSellCardData = () => {
 
 const openModalWindow = (evt) => {
   body.classList.add('scroll-lock');
+  document.addEventListener('keydown', onModalEscDown);
+  renderModalCard(evt);
   if (buttonSellElement.classList.contains('is-active')) {
     modalSellElement.removeAttribute('style');
     sellCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
     sellOverlayElement.addEventListener('click', onModalOverlayElementClick);
+    fillSellCardData();
   } else {
     modalBuyElement.removeAttribute('style');
     buyCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.addEventListener('click', onModalOverlayElementClick);
+    fillBuyCardData();
   }
-  renderModalCard(evt);
-  fillSellCardData();
-  document.addEventListener('keydown', onModalEscDown);
 };
 
 const onModalSubmitClick = (evt) => {
@@ -128,9 +138,9 @@ const onModalSubmitClick = (evt) => {
 };
 
 function closeModalWindow () {
-  const buttonMapElement = document.querySelector('.btn-map');
   const listElement = document.querySelector('.users-list');
   const mapElement = document.querySelector('.map');
+  const buySelectElement = modalSellFormElement.querySelector('#buySelect');
 
   body.classList.remove('scroll-lock');
   document.removeEventListener('keydown', onModalEscDown);
@@ -139,6 +149,7 @@ function closeModalWindow () {
     modalSellElement.setAttribute('style', 'display: none;');
     sellCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
     sellOverlayElement.removeEventListener('click', onModalOverlayElementClick);
+    buySelectElement.removeEventListener('change', onBuySelectElementChange);
   } else {
     modalBuyFormElement.reset();
     modalBuyElement.setAttribute('style', 'display: none;');
@@ -157,7 +168,7 @@ usersListElement.addEventListener('click', onModalSubmitClick);
 function onSellSelectElementChange () {
   const sellerCastomElement = modalBuyFormElement.querySelector('#sellerCastom');
   const currentPaymentMethods = carrentSeller.paymentMethods;
-  if (sellSelectElement.value !== 'Cash in person') {
+  if (sellSelectElement.value !== SelectOptions.cash && sellSelectElement.value !== SelectOptions.default) {
     const selectedMethod = currentPaymentMethods.filter((provider) => provider.provider === sellSelectElement.value);
     sellerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber.split(' ').join('');
   } else {

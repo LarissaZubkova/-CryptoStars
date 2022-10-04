@@ -318,7 +318,7 @@
                                     <use xlink:href="#icon-star"></use>
                                 </svg><span id="seller-name" name="user-name">John Smith</span></span></p>
                         <p class="transaction-info__item transaction-info__item--exchangerate"><span
-                                class="transaction-info__label">Курс</span><span class="transaction-info__data" id="transaction__exchange-rate">9 999
+                                class="transaction-info__label">Курс</span><span class="transaction-info__data" id="buyExchangeRate">9 999
                                 999&nbsp;₽</span></p>
                         <p class="transaction-info__item transaction-info__item--cashlimit"><span
                                 class="transaction-info__label">Лимит</span><span class="transaction-info__data" id="transaction__limit">9 999
@@ -331,7 +331,7 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0" id="payment" required
+                                    <input type="number" value="" placeholder="0" id="buyPayment" required
                                     data-pristine-required-message="Обязательное поле">
                                 </label>
                                 <!-- Пример стилизации ошибки валидации -->
@@ -345,7 +345,7 @@
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Зачисление</span><span
                                         class="custom-input__unit">KEKS</span>
-                                    <input type="number" placeholder="0" id="points" required
+                                    <input type="number" placeholder="0" id="buyPoints" required
                                     data-pristine-required-message="Обязательное поле">
                                 </label>
                             </div>
@@ -379,7 +379,7 @@
                         <div class="modal__input-wrapper modal__input-wrapper--decorated">
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Номер криптокошелька пользователя</span>
-                                    <input type="number" id="walletAddress" placeholder="08701943851-9832345" disabled>
+                                    <input type="text" id="sellerWalletAddress" placeholder="08701943851-9832345" disabled>
                                 </label>
                             </div>
                         </div>
@@ -453,7 +453,7 @@
                         </p>
                         <p class="transaction-info__item transaction-info__item--exchangerate">
                             <span class="transaction-info__label">Курс</span>
-                            <span class="transaction-info__data" id="transaction__exchange-rate">9 999 999&nbsp;₽</span>
+                            <span class="transaction-info__data" id="sellExchangeRate">9 999 999&nbsp;₽</span>
                         </p>
                         <p class="transaction-info__item transaction-info__item--cashlimit">
                             <span class="transaction-info__label">Лимит</span>
@@ -469,7 +469,7 @@
                                     <span class="custom-input__unit">KEKS</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять
                                         все</button>
-                                    <input type="number" value="" placeholder="0">
+                                    <input type="number" value="" placeholder="0" id="sellPpayment">
                                 </label>
                                 <div class="custom-input__error">Минимальная сумма — 9 999 999 ₽</div>
                             </div>
@@ -483,7 +483,7 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0">
+                                    <input type="number" value="" placeholder="0" id="sellPoints">
                                 </label>
                             </div>
                         </div>
@@ -492,7 +492,7 @@
                         <div class="modal__input-wrapper modal__input-wrapper--decorated">
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Номер криптокошелька пользователя</span>
-                                    <input type="number" placeholder="08701943851-983457-2345" disabled>
+                                    <input type="text" id="buyerWalletAddress" placeholder="08701943851-983457-2345" disabled>
                                 </label>
                             </div>
                         </div>
@@ -503,8 +503,8 @@
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select>
-                                    <option selected disabled>Выберите платёжную систему</option>
+                                <select id="buySelect">
+                                    <option selected>Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
                                     <option>BitTransfer</option>
@@ -516,7 +516,7 @@
                             <div class="custom-input">
                                 <!-- В случае, если выбрана оплата наличными, поле нужно оставить пустым -->
                                 <label><span class="custom-input__label">Номер банковской карты пользователя</span>
-                                    <input type="number" placeholder="1234 5678 9012 3456" disabled>
+                                    <input type="number" id="buyerCastom" placeholder="1234 5678 9012 3456" disabled>
                                 </label>
                             </div>
                         </div>

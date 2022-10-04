@@ -2,9 +2,9 @@ import {modalBuyFormElement} from './modal-buy.js';
 import {sendData} from './api.js';
 
 const DIGITS = 2;
-const paymentElement = modalBuyFormElement.querySelector('#payment');
-const pointsElement = modalBuyFormElement.querySelector('#points');
-const exchangeRateElement = modalBuyFormElement.querySelector('#transaction__exchange-rate');
+const paymentElement = modalBuyFormElement.querySelector('#buyPayment');
+const pointsElement = modalBuyFormElement.querySelector('#buyPoints');
+const exchangeRateElement = modalBuyFormElement.querySelector('#buyExchangeRate');
 const transactionLimitElement = modalBuyFormElement.querySelector('#transaction__limit');
 
 // const pristineForBuy = new Pristine(modalBuyFormElement, {
