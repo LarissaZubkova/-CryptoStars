@@ -23,7 +23,7 @@ const buyCloseBtnElement = modalBuyElement.querySelector('.modal__close-btn');
 const sellCloseBtnElement = modalSellElement.querySelector('.modal__close-btn');
 const buyOverlayElement = modalBuyElement.querySelector('.modal__overlay');
 const sellOverlayElement = modalSellElement.querySelector('.modal__overlay');
-const buttonSellElement = document.querySelector('.sell');
+const buttonBuyElement = document.querySelector('.buy');
 const sellSelectElement = modalBuyFormElement.querySelector('#sellSelect');
 const buttonMapElement = document.querySelector('.btn-map');
 
@@ -32,14 +32,44 @@ const setCarrentSeller = (calculetedSeller) => {
   carrentSeller = calculetedSeller;
 };
 
+const fillModalMapCard = (evt) => {
+  const userCardElement = evt.target.closest('.user-card');
+  const verifiedSellerElement = modalBuyFormElement.querySelector('svg');
+  const exchangeRateElement = modalBuyFormElement.querySelector('#buyExchangeRate');
+  const hiddenIdElement = modalBuyFormElement.querySelector('.contractor-id');
+  const hiddenRateElement = modalBuyFormElement.querySelector('.exchange-rate');
+  const sendingCurrencyElement = modalBuyFormElement.querySelector('.sending-currency');
+  const receivingCurrencyElement = modalBuyFormElement.querySelector('.receiving-currency');
+
+  if (!userCardElement.querySelector('svg')) {
+    verifiedSellerElement.setAttribute('style', 'display: none;');
+  } else {
+    verifiedSellerElement.removeAttribute('style');
+  }
+  modalBuyFormElement.querySelector('#seller-name').textContent =
+  userCardElement.querySelector('#cardUserName').textContent;
+  exchangeRateElement.textContent = userCardElement.querySelector('#userCardExchangerate').textContent;
+  modalBuyFormElement.querySelector('#transaction__limit').textContent =
+  userCardElement.querySelector('#userCardCashlimit').textContent;
+
+  const calculetedSeller = sellersList.filter((seller) => {
+    if (seller.exchangeRate === Number(exchangeRateElement.textContent)) {
+      return seller;
+    }
+  }).reduce((seller) => seller);
+  setCarrentSeller(calculetedSeller);
+
+  hiddenIdElement.value = carrentSeller.id;
+  hiddenRateElement.value = exchangeRateElement.textContent;
+  sendingCurrencyElement.value = Currency.rub;
+  receivingCurrencyElement.value = Currency.keks;
+  modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
+};
+
 const fillModalSellerCard = (evt) => {
-  // if (buttonMapElement.classList.contains('is-active')){
-
-  // }
-
   const userListElement = evt.target.closest('.users-list__table-row');
   const verifiedSellerElement = modalBuyFormElement.querySelector('svg');
-  const exchangeRateElement = modalBuyFormElement.querySelector('#transaction__exchange-rate');
+  const exchangeRateElement = modalBuyFormElement.querySelector('#buyExchangeRate');
   const hiddenIdElement = modalBuyFormElement.querySelector('.contractor-id');
   const hiddenRateElement = modalBuyFormElement.querySelector('.exchange-rate');
   const sendingCurrencyElement = modalBuyFormElement.querySelector('.sending-currency');
@@ -72,10 +102,13 @@ const fillModalSellerCard = (evt) => {
 };
 
 const renderModalCard = (evt) =>{
-  if (buttonSellElement.classList.contains('is-active')) {
-    fillModalBuyerCard(evt);
-  } else {
+  const buttonListElement = document.querySelector('.btn-list');
+  if (buttonBuyElement.classList.contains('is-active') && buttonListElement.classList.contains('is-active')) {
     fillModalSellerCard(evt);
+  } else if (buttonMapElement.classList.contains('is-active')) {
+    fillModalMapCard(evt);
+  } else {
+    fillModalBuyerCard(evt);
   }
 };
 
@@ -110,6 +143,7 @@ const fillBuyCardData = () => {
     methodOption.value = methodName;
     sellSelectElement.appendChild(methodOption);
   }
+
   sellSelectElement.addEventListener('change', onSellSelectElementChange);
 };
 
@@ -117,16 +151,16 @@ const openModalWindow = (evt) => {
   body.classList.add('scroll-lock');
   document.addEventListener('keydown', onModalEscDown);
   renderModalCard(evt);
-  if (buttonSellElement.classList.contains('is-active')) {
-    modalSellElement.removeAttribute('style');
-    sellCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
-    sellOverlayElement.addEventListener('click', onModalOverlayElementClick);
-    fillSellCardData();
-  } else {
+  if (buttonBuyElement.classList.contains('is-active')) {
     modalBuyElement.removeAttribute('style');
     buyCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.addEventListener('click', onModalOverlayElementClick);
     fillBuyCardData();
+  } else {
+    modalSellElement.removeAttribute('style');
+    sellCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
+    sellOverlayElement.addEventListener('click', onModalOverlayElementClick);
+    fillSellCardData();
   }
 };
 
@@ -144,18 +178,18 @@ function closeModalWindow () {
 
   body.classList.remove('scroll-lock');
   document.removeEventListener('keydown', onModalEscDown);
-  if (buttonSellElement.classList.contains('is-active')) {
-    modalSellFormElement.reset();
-    modalSellElement.setAttribute('style', 'display: none;');
-    sellCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
-    sellOverlayElement.removeEventListener('click', onModalOverlayElementClick);
-    buySelectElement.removeEventListener('change', onBuySelectElementChange);
-  } else {
+  if (buttonBuyElement.classList.contains('is-active')) {
     modalBuyFormElement.reset();
     modalBuyElement.setAttribute('style', 'display: none;');
     buyCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.removeEventListener('click', onModalOverlayElementClick);
     sellSelectElement.removeEventListener('change', onSellSelectElementChange);
+  } else {
+    modalSellFormElement.reset();
+    modalSellElement.setAttribute('style', 'display: none;');
+    sellCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
+    sellOverlayElement.removeEventListener('click', onModalOverlayElementClick);
+    buySelectElement.removeEventListener('change', onBuySelectElementChange);
   }
   if (buttonMapElement.classList.contains('is-active')) {
     listElement.setAttribute('style', 'display: none');

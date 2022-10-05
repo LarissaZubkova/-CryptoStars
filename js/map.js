@@ -56,8 +56,8 @@ const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance
   }
   userNameElement.textContent = userName;
   userNameElement.setAttribute('style', 'width: 150px');
-  mapBaloonElement.querySelector('#user-card__exchangerate').textContent = exchangeRate;
-  mapBaloonElement.querySelector('#user-card__cashlimit').textContent =
+  mapBaloonElement.querySelector('#userCardExchangerate').textContent = exchangeRate;
+  mapBaloonElement.querySelector('#userCardCashlimit').textContent =
   `${minAmount} - ${(exchangeRate * balance.amount).toFixed(DIGITS)} ₽`;
   badgesListElement.textContent = '';
   paymentMethods.forEach(((method) => {
@@ -66,9 +66,10 @@ const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance
     methodElement.textContent = method.provider;
     badgesListElement.appendChild(methodElement);
   }));
-  const onCardChangeBtnElementClick = () => {
+
+  const onCardChangeBtnElementClick = (evt) => {
     mapElement.closest('.container').setAttribute('style', 'display: none');
-    openModalWindow();
+    openModalWindow(evt);
   };
   cardChangeBtnElement.addEventListener('click', onCardChangeBtnElementClick);
   return mapBaloonElement;

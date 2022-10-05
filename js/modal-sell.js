@@ -23,7 +23,7 @@ const setCarrentBuyer = (calculetedBuyer) => {
 const fillModalBuyerCard = (evt) => {
   const userListElement = evt.target.closest('.users-list__table-row');
   const verifiedBuyerElement = modalSellFormElement.querySelector('svg');
-  const exchangeRateElement = modalSellFormElement.querySelector('#transaction__exchange-rate');
+  const exchangeRateElement = modalSellFormElement.querySelector('#sellExchangeRate');
   const hiddenIdElement = modalSellFormElement.querySelector('.contractor-id');
   const hiddenRateElement = modalSellFormElement.querySelector('.exchange-rate');
   const sendingCurrencyElement = modalSellFormElement.querySelector('.sending-currency');
@@ -83,4 +83,4 @@ function onBuySelectElementChange () {
   }
 }
 
-export {fillModalBuyerCard, fillSellCardData, onBuySelectElementChange, modalSellFormElement};
+export {fillModalBuyerCard, fillSellCardData, onBuySelectElementChange, modalSellFormElement, carrentBuyer};

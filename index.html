@@ -135,7 +135,7 @@
                             <svg width="20" height="20" aria-hidden="true">
                                 <use xlink:href="#icon-kekscoin"></use>
                             </svg>
-                            <span id="user-crypto-balance">
+                            <span id="userCryptoBalance">
                                 <!-- Вставьте сюда количество криптомонет пользователя -->
                             </span>
                             <span class="visually-hidden">кекскоин</span>
@@ -144,7 +144,7 @@
                             <svg width="20" height="20" aria-hidden="true">
                                 <use xlink:href="#icon-rub"></use>
                             </svg>
-                            <span id="user-fiat-balance">
+                            <span id="userFiatBalance">
                                 <!-- Вставьте сюда количество денег у пользователя  -->
                             </span>
                             <span class="visually-hidden">рубль</span>
@@ -170,7 +170,7 @@
                 Для удобства обращения из JS, вы можете добавить контейнерам id
                 или уникальные классы
             -->
-            <div class="container" style="display: none">
+            <div class="container" id="getErrorMessage" style="display: none">
                 <div class="message">
                     <span class="message__icon">
                         <svg width="60" height="60" aria-hidden="true">
@@ -331,8 +331,7 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0" id="buyPayment" required
-                                    data-pristine-required-message="Обязательное поле">
+                                    <input type="number" value="" placeholder="0" id="buyPayment" name="sendingAmount">
                                 </label>
                                 <!-- Пример стилизации ошибки валидации -->
                                 <div class="custom-input__error" id="example-error">Минимальная сумма — 9 999 999 ₽</div>
@@ -345,8 +344,7 @@
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Зачисление</span><span
                                         class="custom-input__unit">KEKS</span>
-                                    <input type="number" placeholder="0" id="buyPoints" required
-                                    data-pristine-required-message="Обязательное поле">
+                                    <input type="number" placeholder="0" id="buyPoints" name="receivingAmount">
                                 </label>
                             </div>
                         </div>
@@ -359,7 +357,7 @@
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select id="sellSelect" required>
+                                <select id="sellSelect" name="paymentMethod">
                                     <option selected>Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
@@ -386,7 +384,7 @@
                         <div class="modal__input-wrapper modal__input-wrapper--decorated">
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Платёжный пароль</span>
-                                    <input type="password" value="123456" placeholder="Введите пароль">
+                                    <input type="password" value="123456" name="paymentPassword" placeholder="Введите пароль">
                                 </label>
                             </div>
                         </div>
@@ -467,9 +465,9 @@
                                 <label>
                                     <span class="custom-input__label">Оплата</span>
                                     <span class="custom-input__unit">KEKS</span>
-                                    <button class="btn btn--textblue custom-input__btn" type="button">обменять
+                                    <button class="btn btn--textblue custom-input__btn" id="changeCarrency"  type="button">обменять
                                         все</button>
-                                    <input type="number" value="" placeholder="0" id="sellPpayment">
+                                    <input type="number" value="" placeholder="0" id="sellPayment">
                                 </label>
                                 <div class="custom-input__error">Минимальная сумма — 9 999 999 ₽</div>
                             </div>
@@ -481,7 +479,7 @@
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Зачисление</span><span
                                         class="custom-input__unit">₽</span>
-                                    <button class="btn btn--textblue custom-input__btn" type="button">обменять все
+                                    <button class="btn btn--textblue custom-input__btn" id="changeMoney" type="button">обменять все
                                     </button>
                                     <input type="number" value="" placeholder="0" id="sellPoints">
                                 </label>
@@ -596,14 +594,14 @@
                 <svg width="20" height="20" aria-hidden="true">
                     <use xlink:href="#icon-star"></use>
                 </svg>
-                <span>Неопознанный енот</span>
+                <span id="cardUserName">Неопознанный енот</span>
             </span>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Валюта</span><span
                     class="user-card__cash-data" id="user-card__currency">KEKS</span></p>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Курс</span><span
-                    class="user-card__cash-data" id="user-card__exchangerate">9 999 999 ₽</span></p>
+                    class="user-card__cash-data" id="userCardExchangerate">9 999 999 ₽</span></p>
             <p class="user-card__cash-item"><span class="user-card__cash-label">Лимит</span><span
-                    class="user-card__cash-data" id="user-card__cashlimit">9 900 ₽ – 9 900 000 000 ₽</span></p>
+                    class="user-card__cash-data" id="userCardCashlimit">9 900 ₽ – 9 900 000 000 ₽</span></p>
             <ul class="user-card__badges-list">
                 <li class="user-card__badges-item badge">BitTransfer</li>
                 <li class="user-card__badges-item badge">CryptoEx</li>

@@ -13,8 +13,8 @@ const setProfileData = (user) => {
 
 const renderUserProfile = (user) => {
   const userProfileElement = document.querySelector('.user-profile');
-  const userCryptoBalanceElement = userProfileElement.querySelector('#user-crypto-balance');
-  const userFiatBalanceElement = userProfileElement.querySelector('#user-fiat-balance');
+  const userCryptoBalanceElement = userProfileElement.querySelector('#userCryptoBalance');
+  const userFiatBalanceElement = userProfileElement.querySelector('#userFiatBalance');
   const userNameElement = userProfileElement.querySelector('.user-profile__name span');
 
   user.balances.forEach((balance) =>{
@@ -27,7 +27,6 @@ const renderUserProfile = (user) => {
   });
   userNameElement.textContent = user.userName;
   setProfileData(user);
-  console.log(state.offers);
 };
 
 export {renderUserProfile, state};
