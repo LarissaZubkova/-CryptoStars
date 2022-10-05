@@ -2,6 +2,7 @@ import {isEscapeKey} from './utils.js';
 import {sellersList} from './users.js';
 import {fillModalBuyerCard, fillSellCardData, onBuySelectElementChange} from './modal-sell.js';
 import {state} from './user-profile.js';
+import {initValidator, resetPristine} from './buy-form.js';
 
 const Currency = {
   keks: 'KEKS',
@@ -27,9 +28,11 @@ const buttonBuyElement = document.querySelector('.buy');
 const sellSelectElement = modalBuyFormElement.querySelector('#sellSelect');
 const buttonMapElement = document.querySelector('.btn-map');
 
-let carrentSeller = {};
+const carrentSeller = {
+  seller: [],
+};
 const setCarrentSeller = (calculetedSeller) => {
-  carrentSeller = calculetedSeller;
+  carrentSeller.seller = calculetedSeller;
 };
 
 const fillModalMapCard = (evt) => {
@@ -59,7 +62,7 @@ const fillModalMapCard = (evt) => {
   }).reduce((seller) => seller);
   setCarrentSeller(calculetedSeller);
 
-  hiddenIdElement.value = carrentSeller.id;
+  hiddenIdElement.value = carrentSeller.seller.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
   sendingCurrencyElement.value = Currency.rub;
   receivingCurrencyElement.value = Currency.keks;
@@ -94,11 +97,12 @@ const fillModalSellerCard = (evt) => {
 
   setCarrentSeller(calculetedSeller);
 
-  hiddenIdElement.value = carrentSeller.id;
+  hiddenIdElement.value = carrentSeller.seller.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
   sendingCurrencyElement.value = Currency.rub;
   receivingCurrencyElement.value = Currency.keks;
   modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
+  modalBuyFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
 };
 
 const renderModalCard = (evt) =>{
@@ -134,7 +138,7 @@ const fillBuyCardData = () => {
   const firstSelectElement = sellSelectElement.children[0];
   sellSelectElement.textContent = '';
   sellSelectElement.appendChild(firstSelectElement);
-  const currentPaymentMethods = carrentSeller.paymentMethods;
+  const currentPaymentMethods = carrentSeller.seller.paymentMethods;
 
   for (const method of currentPaymentMethods) {
     const methodName = method.provider;
@@ -162,6 +166,7 @@ const openModalWindow = (evt) => {
     sellOverlayElement.addEventListener('click', onModalOverlayElementClick);
     fillSellCardData();
   }
+  initValidator();
 };
 
 const onModalSubmitClick = (evt) => {
@@ -184,6 +189,7 @@ function closeModalWindow () {
     buyCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.removeEventListener('click', onModalOverlayElementClick);
     sellSelectElement.removeEventListener('change', onSellSelectElementChange);
+    resetPristine();
   } else {
     modalSellFormElement.reset();
     modalSellElement.setAttribute('style', 'display: none;');
@@ -201,7 +207,7 @@ usersListElement.addEventListener('click', onModalSubmitClick);
 
 function onSellSelectElementChange () {
   const sellerCastomElement = modalBuyFormElement.querySelector('#sellerCastom');
-  const currentPaymentMethods = carrentSeller.paymentMethods;
+  const currentPaymentMethods = carrentSeller.seller.paymentMethods;
   if (sellSelectElement.value !== SelectOptions.cash && sellSelectElement.value !== SelectOptions.default) {
     const selectedMethod = currentPaymentMethods.filter((provider) => provider.provider === sellSelectElement.value);
     sellerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber.split(' ').join('');
@@ -210,4 +216,4 @@ function onSellSelectElementChange () {
   }
 }
 
-export {modalSellFormElement, modalBuyFormElement, openModalWindow};
+export {modalSellFormElement, modalBuyFormElement, openModalWindow, carrentSeller};

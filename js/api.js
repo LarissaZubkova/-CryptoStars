@@ -48,7 +48,6 @@ const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        console.log('сервер недоступен');
         showBuyErrorMessage();
       }
     })
