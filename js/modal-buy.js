@@ -6,14 +6,10 @@ import {initValidatorBuyForm, resetPristineBuyForm} from './buy-form.js';
 import {initValidatorSellForm, resetPristineSellForm} from './sell-form.js';
 import {hideMessagesBuyForm, hideMessagesSellForm} from './messages.js';
 
+const SELECT_OPTION_CASH = 'Cash in person';
 const Currency = {
-  keks: 'KEKS',
-  rub: 'RUB'
-};
-
-const SelectOptions = {
-  cash: 'Cash in person',
-  default: 'Выберите платёжную систему',
+  KEKS: 'KEKS',
+  RUBLE: 'RUB',
 };
 
 const usersListElement = document.querySelector('.users-list__table-body');
@@ -65,8 +61,8 @@ const fillModalMapCard = (evt) => {
   setCarrentSeller(calculetedSeller);
   hiddenIdElement.value = carrentSeller.seller.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
-  sendingCurrencyElement.value = Currency.rub;
-  receivingCurrencyElement.value = Currency.keks;
+  sendingCurrencyElement.value = Currency.RUBLE;
+  receivingCurrencyElement.value = Currency.KEKS;
   modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
   modalBuyFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
 };
@@ -101,8 +97,8 @@ const fillModalSellerCard = (evt) => {
 
   hiddenIdElement.value = carrentSeller.seller.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
-  sendingCurrencyElement.value = Currency.rub;
-  receivingCurrencyElement.value = Currency.keks;
+  sendingCurrencyElement.value = Currency.RUBLE;
+  receivingCurrencyElement.value = Currency.KEKS;
   modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
   modalBuyFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
 };
@@ -214,12 +210,12 @@ usersListElement.addEventListener('click', onModalSubmitClick);
 function onSellSelectElementChange () {
   const sellerCastomElement = modalBuyFormElement.querySelector('#sellerCastom');
   const currentPaymentMethods = carrentSeller.seller.paymentMethods;
-  if (sellSelectElement.value !== SelectOptions.cash && sellSelectElement.value !== SelectOptions.default) {
+  if (sellSelectElement.value !== SELECT_OPTION_CASH) {
     const selectedMethod = currentPaymentMethods.filter((provider) => provider.provider === sellSelectElement.value);
-    sellerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber.split(' ').join('');
+    sellerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber;
   } else {
     sellerCastomElement.value = '';
   }
 }
 
-export {modalSellFormElement, modalBuyFormElement, openModalWindow, carrentSeller};
+export {openModalWindow, carrentSeller};

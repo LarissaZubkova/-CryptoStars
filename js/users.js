@@ -1,9 +1,9 @@
 import {renderSellerPin} from './map.js';
+import {checkIsVarified} from './utils.js';
 
 const DIGITS = 0;
-const CurrentStatus = {
-  BUYER: 'buyer',
-};
+const STATUS_BUYER = 'buyer';
+
 const sellersList = [];
 const buyersList = [];
 const checkedUsersElement = document.querySelector('#checked-users');
@@ -16,7 +16,7 @@ const userRowTemplateElement = document.querySelector('#user-table-row__template
 
 const renderUsersList = (users) => {
   users.forEach((user) => {
-    if (user.status === CurrentStatus.BUYER) {
+    if (user.status === STATUS_BUYER) {
       buyersList.push(user);
     } else {
       sellersList.push(user);
@@ -25,9 +25,7 @@ const renderUsersList = (users) => {
 };
 
 const fillUsersData = (element, user) => {
-  if (!user.isVerified) {
-    element.querySelector('.users-list__table-name svg').remove();
-  }
+  checkIsVarified(element.querySelector('.users-list__table-name svg'), user);
   element.querySelector('#user-name').textContent = user.userName;
   element.querySelector('.users-list__table-currency').textContent = user.balance.currency;
   element.querySelector('.users-list__table-exchangerate').textContent = user.exchangeRate;
@@ -51,40 +49,40 @@ const renderSellersList = () => {
     usersListElement.appendChild(userElement);
 
     if (checkedUsersElement.checked) {
-      if (!user.isVerified) {
-        userElement.remove();
-      }
+      checkIsVarified(userElement, user);
     }
   });
   renderSellerPin(sellersList);
 };
 
 const renderBuyersList = () => {
-  buyersList.forEach(({isVerified, userName, balance, minAmount, exchangeRate}) => {
+  buyersList.forEach((user) => {
     const userElement = userRowTemplateElement.cloneNode(true);
     userElement.querySelector('.users-list__badges-list').textContent = '';
-    userElement.querySelector('.users-list__table-cashlimit').textContent = `${minAmount} - ${balance.amount} ₽`;
-    fillUsersData(userElement,{isVerified, userName, balance, exchangeRate});
+    userElement.querySelector('.users-list__table-cashlimit').textContent =
+     `${user.minAmount} - ${user.balance.amount} ₽`;
+    fillUsersData(userElement, user);
     usersListElement.appendChild(userElement);
 
     if (checkedUsersElement.checked) {
-      if (!isVerified) {
-        userElement.remove();
-      }
+      checkIsVarified(userElement, user);
     }
   });
 };
 
-const onButtonSellClick = () => {
+const changeElementClass = () => {
   buttonSellElement.classList.toggle('is-active');
   buttonBuyElement.classList.toggle('is-active');
+};
+
+const onButtonSellClick = () => {
+  changeElementClass();
   usersListElement.textContent = '';
   renderBuyersList();
 };
 
 const onButtonBuyClick = () => {
-  buttonSellElement.classList.toggle('is-active');
-  buttonBuyElement.classList.toggle('is-active');
+  changeElementClass();
   usersListElement.textContent = '';
   renderSellersList();
 };

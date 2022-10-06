@@ -1,3 +1,5 @@
+import { switchAttribute } from './utils.js';
+
 const modalBuyFormElement = document.querySelector('.modal-buy');
 const buyMessageErrorElement = modalBuyFormElement.querySelector('.modal__validation-message--error');
 const buyMessageSuccessElement = modalBuyFormElement.querySelector('.modal__validation-message--success');
@@ -7,23 +9,19 @@ const sellMessageErrorElement = modalSellFormElement.querySelector('.modal__vali
 const sellMessageSuccessElement = modalSellFormElement.querySelector('.modal__validation-message--success');
 
 const showBuyErrorMessage = () => {
-  buyMessageErrorElement.removeAttribute('style');
-  buyMessageSuccessElement.setAttribute('style', 'display: none');
+  switchAttribute(buyMessageErrorElement, buyMessageSuccessElement);
 };
 
 const showBuySuccessMessage = () => {
-  buyMessageSuccessElement.removeAttribute('style');
-  buyMessageErrorElement.setAttribute('style', 'display: none');
+  switchAttribute(buyMessageSuccessElement, buyMessageErrorElement);
 };
 
 const showSellErrorMessage = () => {
-  sellMessageErrorElement.removeAttribute('style');
-  sellMessageSuccessElement.setAttribute('style', 'display: none');
+  switchAttribute(sellMessageErrorElement, sellMessageSuccessElement);
 };
 
 const showSellSuccessMessage = () => {
-  sellMessageSuccessElement.removeAttribute('style');
-  sellMessageErrorElement.setAttribute('style', 'display: none');
+  switchAttribute(sellMessageSuccessElement, sellMessageErrorElement);
 };
 
 const hideMessagesBuyForm = () => {

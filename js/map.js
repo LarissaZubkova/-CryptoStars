@@ -1,4 +1,5 @@
 import {openModalWindow} from './modal-buy.js';
+import {checkIsVarified} from './utils.js';
 
 const ADDRESS_DEFAULT = {
   lat: 59.92749,
@@ -13,7 +14,10 @@ const Url = {
   VERIFIED_ICON: './img/pin-verified.svg',
   ORDINARY_ICON: 'img/pin.svg',
 };
-
+const IconSize = {
+  SIZE: [36, 46],
+  ANCHOR: [18, 46],
+};
 const buttonListElement = document.querySelector('.btn-list');
 const buttonMapElement = document.querySelector('.btn-map');
 const usersListElement = document.querySelector('.users-list');
@@ -30,19 +34,18 @@ const displayMap = () => {
     },
   ).addTo(map);
 };
-
 const verifiedIcon = L.icon({
   iconUrl: Url.VERIFIED_ICON,
-  iconSize: [36, 46],
-  iconAnchor: [18, 46],
+  iconSize: IconSize.SIZE,
+  iconAnchor: IconSize.ANCHOR,
 });
 const ordinaryIcon = L.icon({
   iconUrl: Url.ORDINARY_ICON,
-  iconSize: [36, 46],
-  iconAnchor: [18, 46],
+  iconSize: IconSize.SIZE,
+  iconAnchor: IconSize.ANCHOR,
 });
 
-const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance, paymentMethods}) => {
+const renderMapBaloon = (user) => {
   const mapBaloonTemplateElement = document.querySelector('#map-baloon__template')
     .content
     .querySelector('.user-card');
@@ -51,16 +54,14 @@ const renderMapBaloon = ({isVerified, userName, exchangeRate, minAmount, balance
   const badgesListElement = mapBaloonElement.querySelector('.user-card__badges-list');
   const cardChangeBtnElement = mapBaloonElement.querySelector('.user-card__change-btn');
 
-  if (!isVerified) {
-    mapBaloonElement.querySelector('.user-card__user-name svg').remove();
-  }
-  userNameElement.textContent = userName;
+  checkIsVarified(mapBaloonElement.querySelector('.user-card__user-name svg'), user);
+  userNameElement.textContent = user.userName;
   userNameElement.setAttribute('style', 'width: 150px');
-  mapBaloonElement.querySelector('#userCardExchangerate').textContent = exchangeRate;
+  mapBaloonElement.querySelector('#userCardExchangerate').textContent = user.exchangeRate;
   mapBaloonElement.querySelector('#userCardCashlimit').textContent =
-  `${minAmount} - ${(exchangeRate * balance.amount).toFixed(DIGITS)} ₽`;
+  `${user.minAmount} - ${(user.exchangeRate * user.balance.amount).toFixed(DIGITS)} ₽`;
   badgesListElement.textContent = '';
-  paymentMethods.forEach(((method) => {
+  user.paymentMethods.forEach(((method) => {
     const methodElement = document.createElement('li');
     methodElement.classList.add('users-list__badges-item', 'badge');
     methodElement.textContent = method.provider;

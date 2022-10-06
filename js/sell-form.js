@@ -3,9 +3,15 @@ import {state} from './user-profile.js';
 import {sendSellData} from './api.js';
 import {showSellErrorMessage} from './messages.js';
 
-const Digits = {
-  RUB: 0,
-  KEKS: 2,
+const DIGIT = 2;
+const Messages = {
+  ERROR_KEKS: 'Хотя бы один КЕКС',
+  ERROR_PASSWORD: 'Неверный пароль',
+};
+const PASSWORD = '180712';
+const ButtonName = {
+  SAVE: 'Сохраняю...',
+  CHANGE: 'Обменять',
 };
 const modalSellFormElement = document.querySelector('.modal-sell');
 const paymentElement = modalSellFormElement.querySelector('#sellPayment');
@@ -51,14 +57,14 @@ const validatePayment = () => {
 
 const renderValidatePaymentMessage = () => {
   if (paymentElement.value < 1) {
-    return 'Хотя бы один КЕКС';
+    return Messages.ERROR_KEKS;
   }
   if (paymentElement.value > state.offers.balances[1].amount) {
     return `Максимальная сумма ${state.offers.balances[1].amount} КЕКС`;
   }
 };
 
-const validatePassword = () => passwordElement.value === '180712';
+const validatePassword = () => passwordElement.value === PASSWORD;
 
 const onPaymentElementChange = () => {
   pointsElement.value = (paymentElement.value * exchangeRateElement.textContent);
@@ -67,7 +73,7 @@ const onPaymentElementChange = () => {
 };
 
 const onPointsElementChange = () => {
-  paymentElement.value = (pointsElement.value / exchangeRateElement.textContent).toFixed(Digits.KEKS);
+  paymentElement.value = (pointsElement.value / exchangeRateElement.textContent).toFixed(DIGIT);
   pristineSellForm.pristine.validate(pointsElement);
   pristineSellForm.pristine.validate(paymentElement);
 };
@@ -82,7 +88,7 @@ const onbtnChangeAllCarrencyClick = () => {
 
 const onbtnChangeAllMoneyClick = () => {
   pointsElement.value = carrentBuyer.buyer.balance.amount;
-  paymentElement.value = (pointsElement.value / exchangeRateElement.textContent).toFixed(Digits.KEKS);
+  paymentElement.value = (pointsElement.value / exchangeRateElement.textContent).toFixed(DIGIT);
   pristineSellForm.pristine.validate(pointsElement);
   pristineSellForm.pristine.validate(paymentElement);
 };
@@ -91,7 +97,7 @@ const initValidatorSellForm = () => {
   pristineSellForm.pristine = new Pristine(modalSellFormElement, pristineConfig);
   pristineSellForm.pristine.addValidator(paymentElement, validatePayment, renderValidatePaymentMessage);
   pristineSellForm.pristine.addValidator(pointsElement, validatePoints, renderValidatePointsMessage);
-  pristineSellForm.pristine.addValidator(passwordElement, validatePassword, 'Неверный пароль');
+  pristineSellForm.pristine.addValidator(passwordElement, validatePassword, Messages.ERROR_PASSWORD);
   paymentElement.addEventListener('input', onPaymentElementChange);
   pointsElement.addEventListener('input', onPointsElementChange);
   btnChangeAllCarrencyElement.addEventListener ('click', onbtnChangeAllCarrencyClick);
@@ -110,12 +116,12 @@ const resetPristineSellForm = () => {
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
-  submitButton.textContent = 'Сохраняю...';
+  submitButton.textContent = ButtonName.SAVE;
 };
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
-  submitButton.textContent = 'Обменять';
+  submitButton.textContent = ButtonName.CHANGE;
 };
 
 const setSellFormSubmit = (onSuccess) => {

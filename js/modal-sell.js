@@ -1,13 +1,10 @@
 import {buyersList} from './users.js';
 import {state} from './user-profile.js';
 
+const SELECT_OPTION_CASH = 'Cash in person';
 const Currency = {
-  keks: 'KEKS',
-  rub: 'RUB'
-};
-const SelectOptions = {
-  cash: 'Cash in person',
-  default: 'Выберите платёжную систему',
+  KEKS: 'KEKS',
+  RUBLE: 'RUB',
 };
 const modalSellElement = document.querySelector('.modal--sell');
 const modalSellFormElement = modalSellElement.querySelector('.modal-sell');
@@ -50,8 +47,8 @@ const fillModalBuyerCard = (evt) => {
 
   hiddenIdElement.value = carrentBuyer.buyer.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
-  sendingCurrencyElement.value = Currency.keks;
-  receivingCurrencyElement.value = Currency.rub;
+  sendingCurrencyElement.value = Currency.KEKS;
+  receivingCurrencyElement.value = Currency.RUBLE;
 
   modalSellFormElement.querySelector('#buyerWalletAddress').value = carrentBuyer.buyer.wallet.address;
   modalSellFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
@@ -76,9 +73,9 @@ const fillSellCardData = () => {
 function onBuySelectElementChange () {
   const buyerCastomElement = modalSellFormElement.querySelector('#buyerCastom');
   const currentPaymentMethods = state.offers.paymentMethods;
-  if (buySelectElement.value !== SelectOptions.cash && buySelectElement.value !== SelectOptions.default) {
+  if (buySelectElement.value !== SELECT_OPTION_CASH) {
     const selectedMethod = currentPaymentMethods.filter((provider) => provider.provider === buySelectElement.value);
-    buyerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber.split(' ').join('');
+    buyerCastomElement.value = selectedMethod.reduce((seller) => seller).accountNumber;
   } else {
     buyerCastomElement.value = '';
   }

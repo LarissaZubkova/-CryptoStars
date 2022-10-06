@@ -3,9 +3,15 @@ import {sendBuyData} from './api.js';
 import {showBuyErrorMessage} from './messages.js';
 import {state} from './user-profile.js';
 
-const Digits = {
-  RUB: 0,
-  KEKS: 2,
+const DIGIT = 2;
+const Messages = {
+  ERROR_KEKS: 'Хотя бы один КЕКС',
+  ERROR_PASSWORD: 'Неверный пароль',
+};
+const PASSWORD = '180712';
+const ButtonName = {
+  SAVE: 'Сохраняю...',
+  CHANGE: 'Обменять',
 };
 
 const modalBuyFormElement = document.querySelector('.modal-buy');
@@ -27,18 +33,20 @@ const pristineBuyForm = {
 };
 
 const validatePayment = () => {
+  const maxAmount = carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate;
   const isValidMin = paymentElement.value >= carrentSeller.seller.minAmount;
-  const isValidMax = paymentElement.value <= carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate;
+  const isValidMax = paymentElement.value <= maxAmount;
 
   return (isValidMin && isValidMax);
 };
 
 const renderValidatePaymentMessage = () => {
+  const maxAmount = carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate;
   if (paymentElement.value < carrentSeller.seller.minAmount) {
     return `Минимальная сумма ${carrentSeller.seller.minAmount} ₽`;
   }
   if (paymentElement.value > carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate) {
-    return `Максимальная сумма ${(carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate).toFixed(Digits.RUB)} ₽`;
+    return `Максимальная сумма ${(maxAmount).toFixed(DIGIT)} ₽`;
   }
 };
 
@@ -51,22 +59,23 @@ const validatePoints = () => {
 
 const renderValidatePointsMessage = () => {
   if (pointsElement.value < 1) {
-    return 'Хотя бы один КЕКС';
+    return Messages.ERROR_KEKS;
   }
   if (pointsElement.value > state.offers.balances[1].amount) {
     return `Максимальная сумма ${carrentSeller.seller.balance.amount} КЕКС`;
   }
 };
 
-const validatePassword = () => passwordElement.value === '180712';
+const validatePassword = () => passwordElement.value === PASSWORD;
 
 const onPaymentElementChange = () => {
   pointsElement.value = (paymentElement.value / exchangeRateElement.textContent);
   pristineBuyForm.pristine.validate(paymentElement);
   pristineBuyForm.pristine.validate(pointsElement);
 };
+
 const onPointsElementChange = () => {
-  paymentElement.value = (pointsElement.value * exchangeRateElement.textContent).toFixed(Digits.KEKS);
+  paymentElement.value = (pointsElement.value * exchangeRateElement.textContent).toFixed(DIGIT);
   pristineBuyForm.pristine.validate(pointsElement);
   pristineBuyForm.pristine.validate(paymentElement);
 };
@@ -83,7 +92,7 @@ const initValidatorBuyForm = () => {
   pristineBuyForm.pristine = new Pristine(modalBuyFormElement, pristineConfig);
   pristineBuyForm.pristine.addValidator(paymentElement, validatePayment, renderValidatePaymentMessage);
   pristineBuyForm.pristine.addValidator(pointsElement, validatePoints, renderValidatePointsMessage);
-  pristineBuyForm.pristine.addValidator(passwordElement, validatePassword, 'Неверный пароль');
+  pristineBuyForm.pristine.addValidator(passwordElement, validatePassword, Messages.ERROR_PASSWORD);
   paymentElement.addEventListener('input', onPaymentElementChange);
   pointsElement.addEventListener('input', onPointsElementChange);
   changeAllBtnElement.addEventListener('click', onChangeAllBtnElementClick);
@@ -100,12 +109,12 @@ const resetPristineBuyForm = () => {
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
-  submitButton.textContent = 'Сохраняю...';
+  submitButton.textContent = ButtonName.SAVE;
 };
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
-  submitButton.textContent = 'Обменять';
+  submitButton.textContent = ButtonName.CHANGE;
 };
 
 const setBuyFormSubmit = (onSuccess) => {

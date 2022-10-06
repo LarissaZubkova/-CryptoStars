@@ -1,3 +1,14 @@
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {isEscapeKey};
+const checkIsVarified = (element, user) => {
+  if (!user.isVerified) {
+    element.remove();
+  }
+};
+
+const switchAttribute = (shownElement, hiddenElement) => {
+  shownElement.removeAttribute('style');
+  hiddenElement.setAttribute('style', 'display: none');
+};
+
+export {isEscapeKey, checkIsVarified, switchAttribute};

@@ -1,6 +1,6 @@
 const CurrencyName = {
-  keks: 'KEKS',
-  ruble: 'RUB',
+  KEKS: 'KEKS',
+  RUBLE: 'RUB',
 };
 
 const state = {
@@ -18,10 +18,10 @@ const renderUserProfile = (user) => {
   const userNameElement = userProfileElement.querySelector('.user-profile__name span');
 
   user.balances.forEach((balance) =>{
-    if (balance.currency === CurrencyName.keks) {
+    if (balance.currency === CurrencyName.KEKS) {
       userCryptoBalanceElement.textContent = balance.amount;
     }
-    if (balance.currency === CurrencyName.ruble) {
+    if (balance.currency === CurrencyName.RUBLE) {
       userFiatBalanceElement.textContent = balance.amount;
     }
   });
