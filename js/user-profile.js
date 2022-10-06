@@ -27,7 +27,6 @@ const renderUserProfile = (user) => {
   });
   userNameElement.textContent = user.userName;
   setProfileData(user);
-  console.log(state.offers);
 };
 
 export {renderUserProfile, state};

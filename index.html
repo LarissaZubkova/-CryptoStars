@@ -352,15 +352,16 @@
                         </div>
                     </div>
                     <div class="modal__container">
-                        <div class="modal__select-wrapper">
+                        <div class="custom-input modal__select-wrapper">
                             <div class="select"><span>Плaтёжная система</span>
                                 <!--
                                     При отрисовке в списке платёжных систем нужно отразить только те,
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select id="sellSelect" name="paymentMethod">
-                                    <option selected>Выберите платёжную систему</option>
+                                <select id="sellSelect" name="paymentMethod" required
+                                data-pristine-required-message="Обязательное поле">
+                                    <option selected disabled value="">Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
                                     <option>BitTransfer</option>
@@ -386,7 +387,8 @@
                         <div class="modal__input-wrapper modal__input-wrapper--decorated">
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Платёжный пароль</span>
-                                    <input type="password" value="123456" name="paymentPassword" placeholder="Введите пароль">
+                                    <input type="password" value="123456" name="paymentPassword" placeholder="Введите пароль" required
+                                    data-pristine-required-message="Обязательное поле">
                                 </label>
                             </div>
                         </div>
@@ -469,7 +471,7 @@
                                     <span class="custom-input__unit">KEKS</span>
                                     <button class="btn btn--textblue custom-input__btn" id="changeCarrency"  type="button">обменять
                                         все</button>
-                                    <input type="number" value="" placeholder="0" id="sellPayment">
+                                    <input type="number" value="" placeholder="0" id="sellPayment" name="sendingAmount">
                                 </label>
                                 <div class="custom-input__error">Минимальная сумма — 9 999 999 ₽</div>
                             </div>
@@ -483,7 +485,7 @@
                                         class="custom-input__unit">₽</span>
                                     <button class="btn btn--textblue custom-input__btn" id="changeMoney" type="button">обменять все
                                     </button>
-                                    <input type="number" value="" placeholder="0" id="sellPoints">
+                                    <input type="number" value="" placeholder="0" id="sellPoints" name="receivingAmount">
                                 </label>
                             </div>
                         </div>
@@ -496,15 +498,16 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="modal__select-wrapper">
+                        <div class="modal__select-wrapper custom-input">
                             <div class="select"><span>Плaтёжная система</span>
                                 <!--
                                     При отрисовке в списке платёжных систем нужно отразить только те,
                                     которые есть у пользователя. Способ - удалить из разметки или добавить disable-атрибут
                                     остаётся на ваше усмотрение. Первый пункт, с предложением выбора, должен быть всегда
                                 -->
-                                <select id="buySelect">
-                                    <option selected>Выберите платёжную систему</option>
+                                <select id="buySelect" name="paymentMethod" required
+                                data-pristine-required-message="Обязательное поле">
+                                    <option selected disabled value="">Выберите платёжную систему</option>
                                     <option>CryptoEx</option>
                                     <option>Первый криптобанк</option>
                                     <option>BitTransfer</option>
@@ -523,7 +526,8 @@
                         <div class="modal__input-wrapper modal__input-wrapper--decorated">
                             <div class="custom-input">
                                 <label><span class="custom-input__label">Платёжный пароль</span>
-                                    <input type="password" placeholder="Введите пароль">
+                                    <input type="password" name="paymentPassword" placeholder="Введите пароль" required
+                                    data-pristine-required-message="Обязательное поле">
                                 </label>
                             </div>
                         </div>

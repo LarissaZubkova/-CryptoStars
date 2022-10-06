@@ -2082,17 +2082,7 @@ button,
 .modal-sell .modal__submit {
   margin-top: 40px;
 }
-.alert-container {
-  z-index: 100;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  padding: 10px 3px;
-  font-size: 30px;
-  text-align: center;
-  background-color: red;
-}
+
 /* @media (hover: hover), screen and (min-width: 0\0) {
   &:hover,
   &:focus {

@@ -2,8 +2,7 @@ import {renderSellerPin} from './map.js';
 
 const DIGITS = 0;
 const CurrentStatus = {
-  buyer: 'buyer',
-  seller: 'seller',
+  BUYER: 'buyer',
 };
 const sellersList = [];
 const buyersList = [];
@@ -17,31 +16,32 @@ const userRowTemplateElement = document.querySelector('#user-table-row__template
 
 const renderUsersList = (users) => {
   users.forEach((user) => {
-    if (user.status === CurrentStatus.buyer) {
+    if (user.status === CurrentStatus.BUYER) {
       buyersList.push(user);
     } else {
       sellersList.push(user);
     }
   });
 };
-const fillUsersData = (element, {isVerified, userName, balance, exchangeRate}) => {
-  if (!isVerified) {
+
+const fillUsersData = (element, user) => {
+  if (!user.isVerified) {
     element.querySelector('.users-list__table-name svg').remove();
   }
-  element.querySelector('#user-name').textContent = userName;
-  element.querySelector('.users-list__table-currency').textContent = balance.currency;
-  element.querySelector('.users-list__table-exchangerate').textContent = exchangeRate;
+  element.querySelector('#user-name').textContent = user.userName;
+  element.querySelector('.users-list__table-currency').textContent = user.balance.currency;
+  element.querySelector('.users-list__table-exchangerate').textContent = user.exchangeRate;
 };
 
 const renderSellersList = () => {
-  sellersList.forEach(({isVerified, userName, balance, minAmount, paymentMethods, exchangeRate}) => {
+  sellersList.forEach((user) => {
     const userElement = userRowTemplateElement.cloneNode(true);
     const badgesListElement = userElement.querySelector('.users-list__badges-list');
     userElement.querySelector('.users-list__table-cashlimit').textContent =
-     `${minAmount} - ${(exchangeRate * balance.amount).toFixed(DIGITS)} ₽`;
-    fillUsersData(userElement,{isVerified, userName, balance, exchangeRate});
+     `${user.minAmount} - ${(user.exchangeRate * user.balance.amount).toFixed(DIGITS)} ₽`;
+    fillUsersData(userElement, user);
     badgesListElement.textContent = '';
-    paymentMethods.forEach(((method) => {
+    user.paymentMethods.forEach(((method) => {
       const methodElement = document.createElement('li');
       methodElement.classList.add('users-list__badges-item', 'badge');
       methodElement.textContent = method.provider;
@@ -51,7 +51,7 @@ const renderSellersList = () => {
     usersListElement.appendChild(userElement);
 
     if (checkedUsersElement.checked) {
-      if (!isVerified) {
+      if (!user.isVerified) {
         userElement.remove();
       }
     }

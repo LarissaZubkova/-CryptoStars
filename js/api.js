@@ -1,4 +1,4 @@
-import {hideUserProfile, showErrorGetData, showBuyErrorMessage} from './messages.js';
+import {hideUserProfile, showErrorGetData, showBuyErrorMessage, showSellErrorMessage, showErrorGetDataList} from './messages.js';
 
 const Url = {
   GET_USER: 'https://cryptostar.grading.pages.academy/user',
@@ -32,11 +32,11 @@ const getDataContractors = (onSuccess) => {
     })
     .then((user) => onSuccess(user))
     .catch(() => {
-      showErrorGetData();
+      showErrorGetDataList();
     });
 };
 
-const sendData = (onSuccess, onFail, body) => {
+const sendBuyData = (onSuccess, onFail, body) => {
   fetch(
     Url.SEND,
     {
@@ -48,7 +48,7 @@ const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        showBuyErrorMessage();
+        onFail();
       }
     })
     .catch(() => {
@@ -56,4 +56,24 @@ const sendData = (onSuccess, onFail, body) => {
     });
 };
 
-export {getDataContractors, getDataUser,sendData};
+const sendSellData = (onSuccess, onFail, body) => {
+  fetch(
+    Url.SEND,
+    {
+      method: 'POST',
+      body: body,
+    },
+  )
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onFail();
+      }
+    })
+    .catch(() => {
+      showSellErrorMessage();
+    });
+};
+
+export {getDataContractors, getDataUser, sendBuyData, sendSellData};

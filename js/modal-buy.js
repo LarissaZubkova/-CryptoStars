@@ -2,7 +2,9 @@ import {isEscapeKey} from './utils.js';
 import {sellersList} from './users.js';
 import {fillModalBuyerCard, fillSellCardData, onBuySelectElementChange} from './modal-sell.js';
 import {state} from './user-profile.js';
-import {initValidator, resetPristine} from './buy-form.js';
+import {initValidatorBuyForm, resetPristineBuyForm} from './buy-form.js';
+import {initValidatorSellForm, resetPristineSellForm} from './sell-form.js';
+import {hideMessagesBuyForm, hideMessagesSellForm} from './messages.js';
 
 const Currency = {
   keks: 'KEKS',
@@ -61,12 +63,12 @@ const fillModalMapCard = (evt) => {
     }
   }).reduce((seller) => seller);
   setCarrentSeller(calculetedSeller);
-
   hiddenIdElement.value = carrentSeller.seller.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
   sendingCurrencyElement.value = Currency.rub;
   receivingCurrencyElement.value = Currency.keks;
   modalBuyFormElement.querySelector('#sellerWalletAddress').value = state.offers.wallet.address;
+  modalBuyFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
 };
 
 const fillModalSellerCard = (evt) => {
@@ -160,13 +162,16 @@ const openModalWindow = (evt) => {
     buyCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.addEventListener('click', onModalOverlayElementClick);
     fillBuyCardData();
+    initValidatorBuyForm();
+    hideMessagesBuyForm();
   } else {
     modalSellElement.removeAttribute('style');
     sellCloseBtnElement.addEventListener('click', onModulCloseBtnElementClick);
     sellOverlayElement.addEventListener('click', onModalOverlayElementClick);
     fillSellCardData();
+    initValidatorSellForm();
+    hideMessagesSellForm();
   }
-  initValidator();
 };
 
 const onModalSubmitClick = (evt) => {
@@ -189,13 +194,14 @@ function closeModalWindow () {
     buyCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
     buyOverlayElement.removeEventListener('click', onModalOverlayElementClick);
     sellSelectElement.removeEventListener('change', onSellSelectElementChange);
-    resetPristine();
+    resetPristineBuyForm();
   } else {
     modalSellFormElement.reset();
     modalSellElement.setAttribute('style', 'display: none;');
     sellCloseBtnElement.removeEventListener('click', onModulCloseBtnElementClick);
     sellOverlayElement.removeEventListener('click', onModalOverlayElementClick);
     buySelectElement.removeEventListener('change', onBuySelectElementChange);
+    resetPristineSellForm();
   }
   if (buttonMapElement.classList.contains('is-active')) {
     listElement.setAttribute('style', 'display: none');

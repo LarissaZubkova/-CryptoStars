@@ -1,17 +1,20 @@
 import {carrentSeller} from './modal-buy.js';
-import {sendData} from './api.js';
+import {sendBuyData} from './api.js';
 import {showBuyErrorMessage} from './messages.js';
 import {state} from './user-profile.js';
-import {showAlert} from './utils.js';
 
-const DIGITS = 0;
+const Digits = {
+  RUB: 0,
+  KEKS: 2,
+};
+
 const modalBuyFormElement = document.querySelector('.modal-buy');
 const paymentElement = modalBuyFormElement.querySelector('#buyPayment');
 const pointsElement = modalBuyFormElement.querySelector('#buyPoints');
 const exchangeRateElement = modalBuyFormElement.querySelector('#buyExchangeRate');
 const submitButton = modalBuyFormElement.querySelector('.modal__submit');
 const changeAllBtnElement = modalBuyFormElement.querySelector('.btn--textblue');
-const sellSelectElement = modalBuyFormElement.querySelector('#sellSelect');
+const passwordElement = modalBuyFormElement.querySelector('[name="paymentPassword"]');
 
 const pristineConfig = {
   classTo: 'custom-input',
@@ -19,7 +22,9 @@ const pristineConfig = {
   errorTextParent: 'custom-input',
 };
 
-let pristineBuyForm;
+const pristineBuyForm = {
+  pristine: [],
+};
 
 const validatePayment = () => {
   const isValidMin = paymentElement.value >= carrentSeller.seller.minAmount;
@@ -33,13 +38,13 @@ const renderValidatePaymentMessage = () => {
     return `Минимальная сумма ${carrentSeller.seller.minAmount} ₽`;
   }
   if (paymentElement.value > carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate) {
-    return `Максимальная сумма ${(carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate).toFixed(DIGITS)} ₽`;
+    return `Максимальная сумма ${(carrentSeller.seller.balance.amount * carrentSeller.seller.exchangeRate).toFixed(Digits.RUB)} ₽`;
   }
 };
 
 const validatePoints = () => {
   const isValidMin = pointsElement.value >= 1;
-  const isValidMax = paymentElement.value <= state.offers.balances[1].amount;
+  const isValidMax = pointsElement.value <= carrentSeller.seller.balance.amount;
 
   return (isValidMin && isValidMax);
 };
@@ -49,48 +54,48 @@ const renderValidatePointsMessage = () => {
     return 'Хотя бы один КЕКС';
   }
   if (pointsElement.value > state.offers.balances[1].amount) {
-    return `Максимальная сумма ${state.offers.balances[1].amount} КЕКС`;
+    return `Максимальная сумма ${carrentSeller.seller.balance.amount} КЕКС`;
   }
 };
-console.log(sellSelectElement.value);
-const validateSelect = () => sellSelectElement.value === 'Выберите платёжную систему';
+
+const validatePassword = () => passwordElement.value === '180712';
 
 const onPaymentElementChange = () => {
-  pointsElement.value = (paymentElement.value / exchangeRateElement.textContent).toFixed(DIGITS);
-  pristineBuyForm.validate(paymentElement);
-  pristineBuyForm.validate(pointsElement);
+  pointsElement.value = (paymentElement.value / exchangeRateElement.textContent);
+  pristineBuyForm.pristine.validate(paymentElement);
+  pristineBuyForm.pristine.validate(pointsElement);
 };
 const onPointsElementChange = () => {
-  paymentElement.value = (pointsElement.value * exchangeRateElement.textContent).toFixed(DIGITS);
-  pristineBuyForm.validate(pointsElement);
-  pristineBuyForm.validate(paymentElement);
+  paymentElement.value = (pointsElement.value * exchangeRateElement.textContent).toFixed(Digits.KEKS);
+  pristineBuyForm.pristine.validate(pointsElement);
+  pristineBuyForm.pristine.validate(paymentElement);
 };
 
 const onChangeAllBtnElementClick = () => {
   const userBalanceElement = document.querySelector('#userFiatBalance');
   paymentElement.value = userBalanceElement.textContent;
-  pointsElement.value = (paymentElement.value / exchangeRateElement.textContent).toFixed(DIGITS);
-  pristineBuyForm.validate(pointsElement);
-  pristineBuyForm.validate(paymentElement);
+  pointsElement.value = (paymentElement.value / exchangeRateElement.textContent);
+  pristineBuyForm.pristine.validate(pointsElement);
+  pristineBuyForm.pristine.validate(paymentElement);
 };
 
-const initValidator = () => {
-  pristineBuyForm = new Pristine(modalBuyFormElement, pristineConfig);
-  pristineBuyForm.addValidator(paymentElement, validatePayment, renderValidatePaymentMessage);
-  pristineBuyForm.addValidator(pointsElement, validatePoints, renderValidatePointsMessage);
-  pristineBuyForm.addValidator(sellSelectElement, validateSelect, showAlert('Нужно выбрать'));
+const initValidatorBuyForm = () => {
+  pristineBuyForm.pristine = new Pristine(modalBuyFormElement, pristineConfig);
+  pristineBuyForm.pristine.addValidator(paymentElement, validatePayment, renderValidatePaymentMessage);
+  pristineBuyForm.pristine.addValidator(pointsElement, validatePoints, renderValidatePointsMessage);
+  pristineBuyForm.pristine.addValidator(passwordElement, validatePassword, 'Неверный пароль');
   paymentElement.addEventListener('input', onPaymentElementChange);
   pointsElement.addEventListener('input', onPointsElementChange);
   changeAllBtnElement.addEventListener('click', onChangeAllBtnElementClick);
 };
 
-const resetPristine = () => {
-  pristineBuyForm.reset();
+const resetPristineBuyForm = () => {
+  pristineBuyForm.pristine.reset();
   paymentElement.removeEventListener('input', onPaymentElementChange);
   pointsElement.removeEventListener('input', onPointsElementChange);
   changeAllBtnElement.removeEventListener('click', onChangeAllBtnElementClick);
-  pristineBuyForm.destroy();
-  initValidator();
+  pristineBuyForm.pristine.destroy();
+  initValidatorBuyForm();
 };
 
 const blockSubmitButton = () => {
@@ -100,29 +105,31 @@ const blockSubmitButton = () => {
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
-  submitButton.textContent = 'Сохранить';
+  submitButton.textContent = 'Обменять';
 };
 
-const setUserFormSubmit = (onSuccess) => {
+const setBuyFormSubmit = (onSuccess) => {
   modalBuyFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
-    const isValid = pristineBuyForm.validate();
+    const isValid = pristineBuyForm.pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      sendData(
+      sendBuyData(
         () => {
           onSuccess();
           unblockSubmitButton();
         },
         () => {
-          showBuyErrorMessage();
           unblockSubmitButton();
+          showBuyErrorMessage();
         },
         new FormData(evt.target),
       );
+    } else {
+      showBuyErrorMessage();
     }
   });
 };
 
-export {setUserFormSubmit, initValidator, resetPristine};
+export {setBuyFormSubmit, initValidatorBuyForm, resetPristineBuyForm};

@@ -48,12 +48,13 @@ const fillModalBuyerCard = (evt) => {
 
   setCarrentBuyer(calculetedBuyer);
 
-  hiddenIdElement.value = carrentBuyer.id;
+  hiddenIdElement.value = carrentBuyer.buyer.id;
   hiddenRateElement.value = exchangeRateElement.textContent;
-  sendingCurrencyElement.value = Currency.rub;
-  receivingCurrencyElement.value = Currency.keks;
+  sendingCurrencyElement.value = Currency.keks;
+  receivingCurrencyElement.value = Currency.rub;
 
   modalSellFormElement.querySelector('#buyerWalletAddress').value = carrentBuyer.buyer.wallet.address;
+  modalSellFormElement.querySelector('.custom-input__error').setAttribute('style', 'display: none;');
 };
 
 const fillSellCardData = () => {
