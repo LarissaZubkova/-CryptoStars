@@ -117,6 +117,11 @@ const unblockSubmitButton = () => {
   submitButton.textContent = ButtonName.CHANGE;
 };
 
+const clearPaymentPoints = () => {
+  paymentElement.value = '';
+  pointsElement.value = '';
+};
+
 const setBuyFormSubmit = (onSuccess) => {
   modalBuyFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -127,6 +132,7 @@ const setBuyFormSubmit = (onSuccess) => {
       sendBuyData(
         () => {
           onSuccess();
+          clearPaymentPoints();
           unblockSubmitButton();
         },
         () => {
