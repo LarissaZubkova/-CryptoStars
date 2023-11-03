@@ -1,6 +1,6 @@
 # Личный проект "Crypto Stars"
 
-<img width="700" alt="" src="" />
+<img width="600" alt="" src="./img/svg/crypto-stars-logo.svg" />
 
 Cryptostar — одностраничный сайт с двумя слоями информации:
 
